@@ -123,10 +123,10 @@ export const Player = () => {
         </Html>
       )}
       <RigidBody
-        position={[-20, 2, -10]}
+        position={[0, 2, 0]}
         rotation={[0, Math.PI / 4, 0]}
         colliders={false}
-        restitution={0.9}
+        restitution={1}
         ref={player}
       >
         <BallCollider args={[1]} />

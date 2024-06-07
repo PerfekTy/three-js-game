@@ -1,14 +1,19 @@
 import { Box, Plane } from "@react-three/drei";
-import { RigidBody } from "@react-three/rapier";
+import { BallCollider, RigidBody } from "@react-three/rapier";
 
 import { Player } from "./Player";
 import { Bilard } from "../models/Bilard";
+import { YellowBall } from "../models/Yellow";
 
 export const Game = () => {
   return (
     <>
       <Player />
       <Bilard />
+      <RigidBody colliders={false} restitution={1} position={[5, 1, 0]}>
+        <BallCollider args={[1]} />
+        <YellowBall />
+      </RigidBody>
       <RigidBody type="fixed" name="floor" key={0}>
         <Box position={[0, -26, 0]} args={[70, 0.1, 50]}>
           <meshStandardMaterial color="#222" />
