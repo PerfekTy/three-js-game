@@ -1,41 +1,85 @@
-import { useFrame, useThree } from "@react-three/fiber";
-import { useKeyboardControls } from "@react-three/drei";
-import { BallCollider, RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
-import { SphereModel } from "../models/Sphere";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { BallCollider, RigidBody } from "@react-three/rapier";
+import { Html } from "@react-three/drei";
 
-interface PlayerProps {
-  player: React.MutableRefObject<any>;
-  pathLength: React.MutableRefObject<number>;
-  addPathSection: () => void;
-}
+import { WhiteBall } from "../models/White";
 
-export const Player = ({ addPathSection, pathLength, player }: PlayerProps) => {
+export const Player = () => {
+  const player = useRef<any>(null!);
   const { camera } = useThree();
 
-  const right = useKeyboardControls((state) => state["right"]);
-  const left = useKeyboardControls((state) => state["left"]);
-  const forward = useKeyboardControls((state) => state["forward"]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPosition, setStartPosition] = useState<THREE.Vector2 | null>(
+    null
+  );
+  const [currentPosition, setCurrentPosition] = useState<THREE.Vector2 | null>(
+    null
+  );
+  const [stretchPower, setStretchPower] = useState(0);
+
+  const handleMouseDown = useCallback((event: MouseEvent) => {
+    setIsDragging(true);
+    setStartPosition(new THREE.Vector2(event.clientX, event.clientY));
+  }, []);
+
+  const handleMouseMove = useCallback(
+    (event: MouseEvent) => {
+      if (isDragging && startPosition) {
+        const currentPos = new THREE.Vector2(event.clientX, event.clientY);
+        setCurrentPosition(currentPos);
+
+        const direction = new THREE.Vector2().subVectors(
+          startPosition,
+          currentPos
+        );
+        const power = direction.length() * 1;
+        setStretchPower(power);
+      }
+    },
+    [isDragging, startPosition]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    if (isDragging && startPosition && currentPosition) {
+      const direction = new THREE.Vector2().subVectors(
+        startPosition,
+        currentPosition
+      );
+      const forceMagnitude = direction.length() * 0.2; // Adjust the multiplier as needed
+      const forceDirection = new THREE.Vector3(
+        direction.x,
+        0,
+        direction.y
+      ).normalize();
+
+      player.current.applyImpulse({
+        x: forceDirection.x * forceMagnitude,
+        y: forceDirection.y * forceMagnitude,
+        z: forceDirection.z * forceMagnitude,
+      });
+    }
+    setIsDragging(false);
+    setStartPosition(null);
+    setCurrentPosition(null);
+    setStretchPower(0);
+  }, [isDragging, startPosition, currentPosition, player]);
+
+  useEffect(() => {
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [handleMouseDown, handleMouseMove, handleMouseUp]);
 
   useFrame(() => {
-    const impulse = { x: 0, y: 0, z: 0 };
-    const maxSpeed = 14;
-
-    const impulseValue = 0.5;
-
-    if (right) {
-      impulse.z += impulseValue;
-    }
-
-    if (left) {
-      impulse.z -= impulseValue;
-    }
-
-    if (forward) {
-      impulse.x += impulseValue;
-    }
-
-    player?.current?.applyImpulse(impulse);
+    const maxSpeed = 100;
 
     const velocity = player?.current?.linvel();
 
@@ -53,25 +97,41 @@ export const Player = ({ addPathSection, pathLength, player }: PlayerProps) => {
     const playerPosition = player.current.translation();
 
     const desiredCameraPosition = new THREE.Vector3(
-      playerPosition.x - 7,
-      playerPosition.y + 3,
-      playerPosition.z
+      playerPosition.x,
+      playerPosition.y + 30,
+      playerPosition.z + 20
     );
 
     camera.position.copy(desiredCameraPosition);
 
     camera.lookAt(playerPosition.x, playerPosition.y, playerPosition.z);
-
-    if (playerPosition.x > pathLength.current * 10 - 20) {
-      addPathSection();
-    }
   });
 
   return (
-    <RigidBody position={[-2.5, 2, 0]} ref={player} colliders={false}>
-      <BallCollider args={[1]} />
-      <directionalLight position={[0, 5, 0]} intensity={1} />
-      <SphereModel />
-    </RigidBody>
+    <>
+      {isDragging && (
+        <Html
+          style={{
+            position: "absolute",
+            top: 10,
+            left: 10,
+            color: "white",
+            fontSize: "20px",
+          }}
+        >
+          Power: {stretchPower.toFixed(2)}
+        </Html>
+      )}
+      <RigidBody
+        position={[-20, 2, -10]}
+        rotation={[0, Math.PI / 4, 0]}
+        colliders={false}
+        restitution={0.9}
+        ref={player}
+      >
+        <BallCollider args={[1]} />
+        <WhiteBall />
+      </RigidBody>
+    </>
   );
 };
