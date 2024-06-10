@@ -15,7 +15,7 @@ type GLTFResult = GLTF & {
 export function SemiOrange(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF("/semi_orange.glb") as GLTFResult;
   return (
-    <RigidBody colliders={false} restitution={1} position={[-5, 1, 2]}>
+    <RigidBody colliders={false} restitution={1} position={[-22.41, 1, -2]}>
       <BallCollider args={[1]} />
       <group {...props} dispose={null} scale={0.05}>
         <mesh
@@ -23,6 +23,11 @@ export function SemiOrange(props: JSX.IntrinsicElements["group"]) {
           receiveShadow
           geometry={nodes["Ball13_04_-_Default_0"].geometry}
           material={materials["04_-_Default"]}
+          rotation={[
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+          ]}
         />
       </group>
     </RigidBody>

@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { BallCollider, RigidBody } from "@react-three/rapier";
 import { Html } from "@react-three/drei";
-
 import { WhiteBall } from "../models/normal/White";
 
 export const Player = () => {
@@ -123,7 +122,7 @@ export const Player = () => {
         </Html>
       )}
       <RigidBody
-        position={[0, 2, 0]}
+        position={[20, 2, 0]}
         rotation={[0, Math.PI / 4, 0]}
         colliders={false}
         restitution={1}

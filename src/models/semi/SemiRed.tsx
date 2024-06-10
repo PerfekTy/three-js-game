@@ -15,7 +15,7 @@ type GLTFResult = GLTF & {
 export function SemiRed(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF("/semi_red.glb") as GLTFResult;
   return (
-    <RigidBody colliders={false} restitution={1} position={[-7, 1, 0]}>
+    <RigidBody colliders={false} restitution={1} position={[-20.6, 1, -3]}>
       <BallCollider args={[1]} />
       <group {...props} dispose={null} scale={0.05}>
         <mesh
@@ -23,6 +23,11 @@ export function SemiRed(props: JSX.IntrinsicElements["group"]) {
           receiveShadow
           geometry={nodes["Ball11_20_-_Default_0"].geometry}
           material={materials["20_-_Default"]}
+          rotation={[
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+          ]}
         />
       </group>
     </RigidBody>

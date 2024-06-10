@@ -17,6 +17,7 @@ import { SemiOrange } from "../models/semi/SemiOrange";
 import { SemiGreen } from "../models/semi/SemiGreen";
 import { SemiBrown } from "../models/semi/SemiBrown";
 import { SemiBlue } from "../models/semi/SemiBlue";
+import { Orange } from "../models/normal/Orange";
 
 export const Game = () => {
   return (
@@ -32,6 +33,9 @@ export const Game = () => {
       <Green />
       <Brown />
       <Blue />
+      <Orange />
+
+      {/* Black balls */}
       <Black />
 
       {/* Semi balls */}

@@ -15,7 +15,7 @@ type GLTFResult = GLTF & {
 export function Black(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF("/black.glb") as GLTFResult;
   return (
-    <RigidBody colliders={false} restitution={1} position={[5, 1, -4]}>
+    <RigidBody colliders={false} restitution={1} position={[-18.8, 1, 0]}>
       <BallCollider args={[1]} />
       <group {...props} dispose={null} scale={0.05}>
         <mesh
@@ -23,6 +23,11 @@ export function Black(props: JSX.IntrinsicElements["group"]) {
           receiveShadow
           geometry={nodes["Ball8_14_-_Default_0"].geometry}
           material={materials["14_-_Default"]}
+          rotation={[
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
+          ]}
         />
       </group>
     </RigidBody>
