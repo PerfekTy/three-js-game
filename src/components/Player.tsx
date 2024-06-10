@@ -4,7 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { BallCollider, RigidBody } from "@react-three/rapier";
 import { Html } from "@react-three/drei";
 
-import { WhiteBall } from "../models/White";
+import { WhiteBall } from "../models/normal/White";
 
 export const Player = () => {
   const player = useRef<any>(null!);

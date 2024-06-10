@@ -3,7 +3,7 @@ import { BallCollider, RigidBody } from "@react-three/rapier";
 
 import { Player } from "./Player";
 import { Bilard } from "../models/Bilard";
-import { YellowBall } from "../models/Yellow";
+import { YellowBall } from "../models/normal/Yellow";
 
 export const Game = () => {
   return (
