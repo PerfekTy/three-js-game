@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
+import { BallCollider, RigidBody } from "@react-three/rapier";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -14,16 +15,17 @@ type GLTFResult = GLTF & {
 export function Red(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF("/red.glb") as GLTFResult;
   return (
-    <group {...props} dispose={null} scale={0.05}>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes["Ball3_03_-_Default_0"].geometry}
-        material={materials["03_-_Default"]}
-        position={[-19.14, 0, -33.842]}
-        rotation={[-2.094, 0, 0]}
-      />
-    </group>
+    <RigidBody colliders={false} restitution={1} position={[7, 1, 0]}>
+      <BallCollider args={[1]} />
+      <group {...props} dispose={null} scale={0.05}>
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes["Ball3_03_-_Default_0"].geometry}
+          material={materials["03_-_Default"]}
+        />
+      </group>
+    </RigidBody>
   );
 }
 

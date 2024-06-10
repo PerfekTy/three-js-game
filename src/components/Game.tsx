@@ -1,19 +1,49 @@
 import { Box, Plane } from "@react-three/drei";
-import { BallCollider, RigidBody } from "@react-three/rapier";
+import { RigidBody } from "@react-three/rapier";
 
 import { Player } from "./Player";
 import { Bilard } from "../models/Bilard";
 import { YellowBall } from "../models/normal/Yellow";
+import { Red } from "../models/normal/Red";
+import { Purple } from "../models/normal/Purple";
+import { Green } from "../models/normal/Green";
+import { Brown } from "../models/normal/Brown";
+import { Blue } from "../models/normal/Blue";
+import { Black } from "../models/normal/Black";
+import { SemiYellow } from "../models/semi/SemiYellow";
+import { SemiRed } from "../models/semi/SemiRed";
+import { SemiPurple } from "../models/semi/SemiPurple";
+import { SemiOrange } from "../models/semi/SemiOrange";
+import { SemiGreen } from "../models/semi/SemiGreen";
+import { SemiBrown } from "../models/semi/SemiBrown";
+import { SemiBlue } from "../models/semi/SemiBlue";
 
 export const Game = () => {
   return (
     <>
+      {/* Player & table */}
       <Player />
       <Bilard />
-      <RigidBody colliders={false} restitution={1} position={[5, 1, 0]}>
-        <BallCollider args={[1]} />
-        <YellowBall />
-      </RigidBody>
+
+      {/* Normal balls */}
+      <YellowBall />
+      <Red />
+      <Purple />
+      <Green />
+      <Brown />
+      <Blue />
+      <Black />
+
+      {/* Semi balls */}
+      <SemiYellow />
+      <SemiRed />
+      <SemiPurple />
+      <SemiOrange />
+      <SemiGreen />
+      <SemiBrown />
+      <SemiBlue />
+
+      {/* Floor */}
       <RigidBody type="fixed" name="floor" key={0}>
         <Box position={[0, -26, 0]} args={[70, 0.1, 50]}>
           <meshStandardMaterial color="#222" />
