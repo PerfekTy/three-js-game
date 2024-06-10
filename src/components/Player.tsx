@@ -46,7 +46,7 @@ export const Player = () => {
         startPosition,
         currentPosition
       );
-      const forceMagnitude = direction.length() * 0.2; // Adjust the multiplier as needed
+      const forceMagnitude = direction.length() * 0.2;
       const forceDirection = new THREE.Vector3(
         direction.x,
         0,
@@ -55,7 +55,7 @@ export const Player = () => {
 
       player.current.applyImpulse({
         x: forceDirection.x * forceMagnitude,
-        y: forceDirection.y * forceMagnitude,
+        y: 0,
         z: forceDirection.z * forceMagnitude,
       });
     }
@@ -78,8 +78,8 @@ export const Player = () => {
   }, [handleMouseDown, handleMouseMove, handleMouseUp]);
 
   useFrame(() => {
-    const maxSpeed = 100;
-
+    const maxSpeed = 130;
+    const dampingFactor = 0.99;
     const velocity = player?.current?.linvel();
 
     const speed = Math.sqrt(velocity.x ** 2 + velocity.z ** 2);
@@ -88,8 +88,14 @@ export const Player = () => {
       const scale = maxSpeed / speed;
       player.current.setLinvel({
         x: velocity.x * scale,
-        y: velocity.y * scale,
+        y: 0,
         z: velocity.z * scale,
+      });
+    } else {
+      player.current.setLinvel({
+        x: velocity.x * dampingFactor,
+        y: 0,
+        z: velocity.z * dampingFactor,
       });
     }
 
@@ -125,7 +131,10 @@ export const Player = () => {
         position={[20, 2, 0]}
         rotation={[0, Math.PI / 4, 0]}
         colliders={false}
-        restitution={1}
+        restitution={0.6}
+        friction={0.3}
+        linearDamping={0.2}
+        angularDamping={0.4}
         ref={player}
       >
         <BallCollider args={[1]} />

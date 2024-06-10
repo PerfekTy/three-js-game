@@ -15,7 +15,14 @@ type GLTFResult = GLTF & {
 export function Purple(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF("/purple.glb") as GLTFResult;
   return (
-    <RigidBody colliders={false} restitution={1} position={[-20.6, 1, 3]}>
+    <RigidBody
+      colliders={false}
+      restitution={0.6}
+      friction={0.3}
+      linearDamping={0.2}
+      angularDamping={0.4}
+      position={[-20.6, 1, 3]}
+    >
       <BallCollider args={[1]} />
       <group {...props} dispose={null} scale={0.05}>
         <mesh
