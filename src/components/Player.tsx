@@ -2,12 +2,12 @@ import * as THREE from "three";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { BallCollider, RigidBody } from "@react-three/rapier";
-import { Html } from "@react-three/drei";
 import { WhiteBall } from "../models/normal/White";
 
 export const Player = () => {
   const player = useRef<any>(null!);
-  const { camera } = useThree();
+  const arrowHelper = useRef<any>(null!);
+  const { camera, scene } = useThree();
 
   const [isDragging, setIsDragging] = useState(false);
   const [startPosition, setStartPosition] = useState<THREE.Vector2 | null>(
@@ -35,6 +35,14 @@ export const Player = () => {
         );
         const power = direction.length() * 1;
         setStretchPower(power);
+
+        const dir = new THREE.Vector3(direction.x, 0, direction.y).normalize();
+        const length = direction.length() / 20;
+
+        arrowHelper.current.setDirection(dir);
+        arrowHelper.current.setLength(length);
+        arrowHelper.current.position.copy(player.current.translation());
+        arrowHelper.current.visible = true;
       }
     },
     [isDragging, startPosition]
@@ -63,6 +71,7 @@ export const Player = () => {
     setStartPosition(null);
     setCurrentPosition(null);
     setStretchPower(0);
+    arrowHelper.current.visible = false;
   }, [isDragging, startPosition, currentPosition]);
 
   useEffect(() => {
@@ -70,12 +79,23 @@ export const Player = () => {
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", handleMouseUp);
 
+    const arrow = new THREE.ArrowHelper(
+      new THREE.Vector3(0, 0, 1),
+      new THREE.Vector3(0, 0, 0),
+      1,
+      getPowerColor(stretchPower)
+    );
+    arrow.visible = false;
+    scene.add(arrow);
+    arrowHelper.current = arrow;
+
     return () => {
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
+      scene.remove(arrow);
     };
-  }, [handleMouseDown, handleMouseMove, handleMouseUp]);
+  }, [handleMouseDown, handleMouseMove, handleMouseUp, scene]);
 
   useFrame(() => {
     const maxSpeed = 130;
@@ -83,21 +103,12 @@ export const Player = () => {
 
     if (velocity) {
       const speed = Math.sqrt(velocity.x ** 2 + velocity.z ** 2);
-
       if (speed > maxSpeed) {
         const scale = maxSpeed / speed;
-        console.log(scale);
-
         player.current.setLinvel({
           x: velocity.x * scale,
           y: velocity.y,
           z: velocity.z * scale,
-        });
-      } else {
-        player.current.setLinvel({
-          x: velocity.x * 1,
-          y: velocity.y,
-          z: velocity.z * 1,
         });
       }
     }
@@ -117,39 +128,26 @@ export const Player = () => {
   });
 
   const getPowerColor = (power: number) => {
-    if (power > 1300) return "red";
-    if (power > 700) return "orange";
-    if (power > 300) return "yellow";
-    return "green";
+    if (power > 1300) return "#ff0000";
+    if (power > 700) return "#ff6600";
+    if (power > 300) return "#ffcc00";
+    return "#00ff00";
   };
 
   return (
-    <>
-      {isDragging && (
-        <Html
-          style={{
-            position: "absolute",
-            top: 10,
-            left: 10,
-            color: getPowerColor(stretchPower),
-            fontSize: "20px",
-          }}
-        >
-          Power: {stretchPower.toFixed(2)}
-        </Html>
-      )}
-      <RigidBody
-        position={[-20, 0, 10]}
-        colliders={false}
-        restitution={0.6}
-        friction={0.3}
-        linearDamping={0.2}
-        angularDamping={0.4}
-        ref={player}
-      >
-        <BallCollider args={[1]} />
-        <WhiteBall />
-      </RigidBody>
-    </>
+    <RigidBody
+      name="white"
+      position={[0, 0, 0]}
+      canSleep={false}
+      colliders={false}
+      restitution={0.6}
+      friction={0.3}
+      linearDamping={0.2}
+      angularDamping={0.4}
+      ref={player}
+    >
+      <BallCollider args={[1]} />
+      <WhiteBall />
+    </RigidBody>
   );
 };

@@ -16,8 +16,13 @@ import { SemiBrown } from "../models/semi/SemiBrown";
 import { SemiBlue } from "../models/semi/SemiBlue";
 import { Orange } from "../models/normal/Orange";
 import { BilardColliders } from "./BilardColliders";
+import { useState } from "react";
 
 export const Game = () => {
+  const [balls, setBalls] = useState<string[]>([]);
+
+  console.log(balls);
+
   return (
     <>
       {/* Player & table */}
@@ -46,7 +51,7 @@ export const Game = () => {
       <SemiBlue />
 
       {/* Floor */}
-      <BilardColliders />
+      <BilardColliders balls={balls} setBalls={setBalls} />
     </>
   );
 };

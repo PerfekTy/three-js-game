@@ -16,6 +16,7 @@ export function Black(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF("/black.glb") as GLTFResult;
   return (
     <RigidBody
+      name="black"
       colliders={false}
       restitution={0.6}
       friction={0.3}

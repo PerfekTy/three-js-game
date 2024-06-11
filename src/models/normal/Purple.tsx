@@ -16,6 +16,7 @@ export function Purple(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF("/purple.glb") as GLTFResult;
   return (
     <RigidBody
+      name="purple"
       colliders={false}
       restitution={0.6}
       friction={0.3}

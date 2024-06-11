@@ -20,7 +20,7 @@ function App() {
         <Suspense fallback={"Loading..."}>
           <ambientLight intensity={0.7} />
           <directionalLight intensity={0.6} position={[0, 5, 0]} />
-          <Physics>
+          <Physics debug>
             <Game />
           </Physics>
           <Sky />

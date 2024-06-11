@@ -17,6 +17,7 @@ export function SemiYellow(props: JSX.IntrinsicElements["group"]) {
 
   return (
     <RigidBody
+      name="semi_yellow"
       colliders={false}
       restitution={0.6}
       friction={0.3}

@@ -16,6 +16,7 @@ export function SemiBlue(props: JSX.IntrinsicElements["group"]) {
   const { nodes, materials } = useGLTF("/semi_blue.glb") as GLTFResult;
   return (
     <RigidBody
+      name="semi_blue"
       colliders={false}
       restitution={0.6}
       friction={0.3}

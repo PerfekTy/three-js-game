@@ -17,6 +17,7 @@ export function YellowBall(props: JSX.IntrinsicElements["group"]) {
 
   return (
     <RigidBody
+      name="yellow"
       colliders={false}
       restitution={0.6}
       friction={0.3}
