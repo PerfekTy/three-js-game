@@ -31,11 +31,7 @@ export function Red(props: JSX.IntrinsicElements["group"]) {
           receiveShadow
           geometry={nodes["Ball3_03_-_Default_0"].geometry}
           material={materials["03_-_Default"]}
-          rotation={[
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-          ]}
+          rotation={[0, 0, 0]}
         />
       </group>
     </RigidBody>

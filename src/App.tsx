@@ -1,12 +1,27 @@
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import { Game } from "./components/Game";
 
-import "./App.css";
 import { Sky } from "@react-three/drei";
+import "./App.css";
 
-function App() {
+export const App = () => {
+  const [playerOne, setPlayerOne] = useState({
+    name: "Player 1",
+    score: 0,
+    hasMove: true,
+    hasMoved: false,
+    bills: [],
+  });
+  const [playerTwo, setPlayerTwo] = useState({
+    name: "Player 2",
+    score: 0,
+    hasMove: false,
+    hasMoved: true,
+    bills: [],
+  });
+
   return (
     <main style={{ width: "100%", height: "100vh" }}>
       <Canvas
@@ -18,16 +33,24 @@ function App() {
         shadows
       >
         <Suspense fallback={"Loading..."}>
-          <ambientLight intensity={0.7} />
-          <directionalLight intensity={0.6} position={[0, 5, 0]} />
-          <Physics debug>
-            <Game />
+          <ambientLight intensity={0.7} castShadow />
+          <directionalLight
+            intensity={1}
+            position={[0, 18, 0]}
+            castShadow
+            shadow-mapSize-width={4096}
+            shadow-mapSize-height={4096}
+            shadow-camera-left={-35}
+            shadow-camera-right={35}
+            shadow-camera-top={35}
+            shadow-camera-bottom={-35}
+          />
+          <Physics>
+            <Game playerOne={playerOne} playerTwo={playerTwo} />
           </Physics>
           <Sky />
         </Suspense>
       </Canvas>
     </main>
   );
-}
-
-export default App;
+};

@@ -4,7 +4,17 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { BallCollider, RigidBody } from "@react-three/rapier";
 import { WhiteBall } from "../models/normal/White";
 
-export const Player = () => {
+interface PlayerProps {
+  canMove: boolean;
+  setCanMove: (canMove: boolean) => void;
+  setBallStopped: (ballStopped: boolean | null) => void;
+}
+
+export const Player = ({
+  canMove,
+  setCanMove,
+  setBallStopped,
+}: PlayerProps) => {
   const player = useRef<any>(null!);
   const arrowHelper = useRef<any>(null!);
   const { camera, scene } = useThree();
@@ -18,10 +28,15 @@ export const Player = () => {
   );
   const [stretchPower, setStretchPower] = useState(0);
 
-  const handleMouseDown = useCallback((event: MouseEvent) => {
-    setIsDragging(true);
-    setStartPosition(new THREE.Vector2(event.clientX, event.clientY));
-  }, []);
+  const handleMouseDown = useCallback(
+    (event: MouseEvent) => {
+      if (canMove) {
+        setIsDragging(true);
+        setStartPosition(new THREE.Vector2(event.clientX, event.clientY));
+      }
+    },
+    [canMove]
+  );
 
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
@@ -66,6 +81,8 @@ export const Player = () => {
         y: 0,
         z: forceDirection.z * forceMagnitude,
       });
+      setCanMove(false);
+      setBallStopped(false);
     }
     setIsDragging(false);
     setStartPosition(null);
@@ -111,6 +128,12 @@ export const Player = () => {
           z: velocity.z * scale,
         });
       }
+
+      const threshold = 0.1;
+      if (speed < threshold) {
+        setBallStopped(true);
+        setCanMove(true);
+      }
     }
 
     const playerPosition = player.current.translation();
@@ -118,7 +141,7 @@ export const Player = () => {
     if (playerPosition) {
       const desiredCameraPosition = new THREE.Vector3(
         playerPosition.x,
-        playerPosition.y + 30,
+        playerPosition.y + 35,
         playerPosition.z + 20
       );
 
@@ -135,19 +158,21 @@ export const Player = () => {
   };
 
   return (
-    <RigidBody
-      name="white"
-      position={[0, 0, 0]}
-      canSleep={false}
-      colliders={false}
-      restitution={0.6}
-      friction={0.3}
-      linearDamping={0.2}
-      angularDamping={0.4}
-      ref={player}
-    >
-      <BallCollider args={[1]} />
-      <WhiteBall />
-    </RigidBody>
+    <>
+      <RigidBody
+        name="white"
+        position={[20, 0, 0]}
+        canSleep={false}
+        colliders={false}
+        restitution={0.6}
+        friction={0.3}
+        linearDamping={0.2}
+        angularDamping={0.4}
+        ref={player}
+      >
+        <BallCollider args={[1]} />
+        <WhiteBall />
+      </RigidBody>
+    </>
   );
 };

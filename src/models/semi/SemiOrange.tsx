@@ -31,11 +31,7 @@ export function SemiOrange(props: JSX.IntrinsicElements["group"]) {
           receiveShadow
           geometry={nodes["Ball13_04_-_Default_0"].geometry}
           material={materials["04_-_Default"]}
-          rotation={[
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-          ]}
+          rotation={[0, 0, 0]}
         />
       </group>
     </RigidBody>

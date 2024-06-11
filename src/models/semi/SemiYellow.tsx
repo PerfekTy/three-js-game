@@ -32,11 +32,7 @@ export function SemiYellow(props: JSX.IntrinsicElements["group"]) {
           receiveShadow
           geometry={nodes["Ball9_15_-_Default_0"].geometry}
           material={materials["15_-_Default"]}
-          rotation={[
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-          ]}
+          rotation={[0, 0, 0]}
         />
       </group>
     </RigidBody>

@@ -31,11 +31,7 @@ export function Green(props: JSX.IntrinsicElements["group"]) {
           receiveShadow
           geometry={nodes["Ball6_09_-_Default_0"].geometry}
           material={materials["09_-_Default"]}
-          rotation={[
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-          ]}
+          rotation={[0, 0, 0]}
         />
       </group>
     </RigidBody>

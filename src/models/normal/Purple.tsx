@@ -31,11 +31,7 @@ export function Purple(props: JSX.IntrinsicElements["group"]) {
           receiveShadow
           geometry={nodes["Ball4_07_-_Default_0"].geometry}
           material={materials["07_-_Default"]}
-          rotation={[
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-          ]}
+          rotation={[0, 0, 0]}
         />
       </group>
     </RigidBody>

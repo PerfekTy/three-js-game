@@ -1,34 +1,39 @@
 import { Box, Plane } from "@react-three/drei";
 import { CylinderCollider, RigidBody } from "@react-three/rapier";
-
-import React from "react";
+import { Player } from "./Game";
 
 interface BilardCollidersProps {
   balls: string[];
-  setBalls: React.Dispatch<React.SetStateAction<string[]>>;
+  addBall: (ballName: string) => void;
+  setIsInHole: (isInHole: boolean) => void;
+  currentPlayer: Player;
 }
 
-export const BilardColliders = ({ setBalls, balls }: BilardCollidersProps) => {
-  const addBall = (ball: string) => {
-    setBalls((prevBalls: string[]) => [...prevBalls, ball]);
-  };
-
+export const BilardColliders = ({
+  addBall,
+  balls,
+  setIsInHole,
+  currentPlayer,
+}: BilardCollidersProps) => {
   const handleCollisionEnter = (other: any) => {
     if (other.rigidBodyObject) {
       const ballName = other.rigidBodyObject.name;
       if (!balls.includes(ballName)) {
+        setIsInHole(true);
         addBall(ballName);
+        currentPlayer.bills.push(ballName);
+        currentPlayer.score += 1;
       }
     }
   };
 
   return (
     <RigidBody type="fixed" name="floor" key={0}>
-      <Box position={[0, -27, 0]} args={[100, 1, 100]}>
+      <Box position={[0, -27, 0]} args={[100, 1, 100]} receiveShadow>
         <meshStandardMaterial color="#222" />
       </Box>
 
-      <Box position={[0, -0.55, 0]} args={[64, 1, 30]}>
+      <Box position={[0, -0.55, 0]} args={[64, 1, 30]} receiveShadow>
         <meshStandardMaterial color="#fff" opacity={0} transparent />
       </Box>
 
@@ -229,7 +234,7 @@ export const BilardColliders = ({ setBalls, balls }: BilardCollidersProps) => {
       {/* Center down hole */}
       <CylinderCollider
         args={[0.5, 2]}
-        position={[0, -10, 16.5]}
+        position={[0, -7, 16.5]}
         key={0}
         onCollisionEnter={({ other }) => handleCollisionEnter(other)}
       />
@@ -237,7 +242,7 @@ export const BilardColliders = ({ setBalls, balls }: BilardCollidersProps) => {
       {/* Center up hole */}
       <CylinderCollider
         args={[0.5, 2]}
-        position={[0, -10, -16.5]}
+        position={[0, -7, -16.5]}
         key={1}
         onCollisionEnter={({ other }) => handleCollisionEnter(other)}
       />
@@ -245,7 +250,7 @@ export const BilardColliders = ({ setBalls, balls }: BilardCollidersProps) => {
       {/* Right up corner hole */}
       <CylinderCollider
         args={[0.5, 2]}
-        position={[32.5, -10, -16.5]}
+        position={[32.5, -7, -16.5]}
         key={2}
         onCollisionEnter={({ other }) => handleCollisionEnter(other)}
       />
@@ -253,7 +258,7 @@ export const BilardColliders = ({ setBalls, balls }: BilardCollidersProps) => {
       {/* Right down corner hole */}
       <CylinderCollider
         args={[0.5, 2]}
-        position={[32.5, -10, 16.5]}
+        position={[32.5, -7, 16.5]}
         key={3}
         onCollisionEnter={({ other }) => handleCollisionEnter(other)}
       />
@@ -261,7 +266,7 @@ export const BilardColliders = ({ setBalls, balls }: BilardCollidersProps) => {
       {/* Left down corner hole */}
       <CylinderCollider
         args={[0.5, 2]}
-        position={[-32.5, -10, 16.5]}
+        position={[-32.5, -7, 16.5]}
         key={4}
         onCollisionEnter={({ other }) => handleCollisionEnter(other)}
       />
@@ -269,7 +274,7 @@ export const BilardColliders = ({ setBalls, balls }: BilardCollidersProps) => {
       {/* Left up corner hole */}
       <CylinderCollider
         args={[0.5, 2]}
-        position={[-32.5, -10, -16.5]}
+        position={[-32.5, -7, -16.5]}
         key={5}
         onCollisionEnter={({ other }) => handleCollisionEnter(other)}
       />

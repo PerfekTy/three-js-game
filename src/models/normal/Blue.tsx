@@ -31,11 +31,7 @@ export function Blue(props: JSX.IntrinsicElements["group"]) {
           receiveShadow
           geometry={nodes["Ball2_02_-_Default_0"].geometry}
           material={materials["02_-_Default"]}
-          rotation={[
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-          ]}
+          rotation={[0, 0, 0]}
         />
       </group>
     </RigidBody>

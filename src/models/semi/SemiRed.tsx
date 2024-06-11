@@ -31,11 +31,7 @@ export function SemiRed(props: JSX.IntrinsicElements["group"]) {
           receiveShadow
           geometry={nodes["Ball11_20_-_Default_0"].geometry}
           material={materials["20_-_Default"]}
-          rotation={[
-            Math.random() * 10,
-            Math.random() * 10,
-            Math.random() * 10,
-          ]}
+          rotation={[0, 0, 0]}
         />
       </group>
     </RigidBody>
