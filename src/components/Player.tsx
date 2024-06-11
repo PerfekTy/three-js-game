@@ -3,17 +3,22 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { BallCollider, RigidBody } from "@react-three/rapier";
 import { WhiteBall } from "../models/normal/White";
+import { GameState } from "../App";
+import { Html } from "@react-three/drei";
+import { Camera } from "lucide-react";
 
 interface PlayerProps {
   canMove: boolean;
   setCanMove: (canMove: boolean) => void;
   setBallStopped: (ballStopped: boolean | null) => void;
+  gameState: GameState;
 }
 
 export const Player = ({
   canMove,
   setCanMove,
   setBallStopped,
+  gameState,
 }: PlayerProps) => {
   const player = useRef<any>(null!);
   const arrowHelper = useRef<any>(null!);
@@ -27,6 +32,9 @@ export const Player = ({
     null
   );
   const [stretchPower, setStretchPower] = useState(0);
+  const [customCameraPosition, setCustomCameraPosition] = useState(
+    new THREE.Vector3(0, 0, 0)
+  );
 
   const handleMouseDown = useCallback(
     (event: MouseEvent) => {
@@ -145,6 +153,8 @@ export const Player = ({
         playerPosition.z + 20
       );
 
+      setCustomCameraPosition(desiredCameraPosition);
+
       camera.position.copy(desiredCameraPosition);
       camera.lookAt(playerPosition.x, playerPosition.y, playerPosition.z);
     }
@@ -161,7 +171,7 @@ export const Player = ({
     <>
       <RigidBody
         name="white"
-        position={[20, 0, 0]}
+        position={gameState !== "playing" ? [0, 0, 0] : [20, 0, 0]}
         canSleep={false}
         colliders={false}
         restitution={0.6}
@@ -173,6 +183,79 @@ export const Player = ({
         <BallCollider args={[1]} />
         <WhiteBall />
       </RigidBody>
+      {gameState === "playing" && (
+        <>
+          {/* Right down corner */}
+          <Html
+            position={[33.5, 0, 16]}
+            transform
+            rotation={[-Math.PI / 2, 0, 0.8]}
+            className="camera"
+          >
+            <Camera
+              size={100}
+              color="#fff"
+              onClick={() => {
+                const playerPosition = player.current.translation();
+                setCustomCameraPosition(
+                  new THREE.Vector3(
+                    playerPosition.x,
+                    playerPosition.y + 15,
+                    playerPosition.z + 20
+                  )
+                );
+                camera.position.copy(customCameraPosition);
+                console.log("clicked");
+              }}
+            />
+          </Html>
+          {/* Right up corner */}
+          <Html
+            position={[33.5, 0, -16]}
+            transform
+            rotation={[-Math.PI / -2, 0, 0.8]}
+            className="camera"
+          >
+            <Camera size={100} color="#fff" />
+          </Html>
+          {/* Left down corner */}
+          <Html
+            position={[-33.5, 0, 16]}
+            transform
+            rotation={[-Math.PI / 2, 0, -0.8]}
+            className="camera"
+          >
+            <Camera size={100} color="#fff" />
+          </Html>
+          {/* Left up corner */}
+          <Html
+            position={[-33.5, 0, -16]}
+            transform
+            rotation={[-Math.PI / -2, 0, -0.8]}
+            className="camera"
+          >
+            <Camera size={100} color="#fff" />
+          </Html>
+          {/* Center up */}
+          <Html
+            position={[0, 0, -16.5]}
+            transform
+            rotation={[-Math.PI / 2, 0, 0]}
+            className="camera"
+          >
+            <Camera size={100} color="#fff" />
+          </Html>
+          {/* Center down */}
+          <Html
+            position={[0, 0, 16.5]}
+            transform
+            rotation={[-Math.PI / 2, 0, 0]}
+            className="camera"
+          >
+            <Camera size={100} color="#fff" />
+          </Html>
+        </>
+      )}
     </>
   );
 };

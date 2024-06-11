@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { Html } from "@react-three/drei";
+import { GameState } from "../App";
+
 import { Bilard } from "../models/Bilard";
 import { YellowBall } from "../models/normal/Yellow";
 import { Red } from "../models/normal/Red";
@@ -15,9 +19,7 @@ import { SemiBrown } from "../models/semi/SemiBrown";
 import { SemiBlue } from "../models/semi/SemiBlue";
 import { Orange } from "../models/normal/Orange";
 import { BilardColliders } from "./BilardColliders";
-import { useEffect, useState } from "react";
 import { Player } from "./Player";
-import { useFrame } from "@react-three/fiber";
 
 export type Player = {
   name: string;
@@ -30,9 +32,10 @@ export type Player = {
 interface GameProps {
   playerOne: Player;
   playerTwo: Player;
+  gameState: GameState;
 }
 
-export const Game = ({ playerOne, playerTwo }: GameProps) => {
+export const Game = ({ playerOne, playerTwo, gameState }: GameProps) => {
   const [currentPlayer, setCurrentPlayer] = useState(playerOne);
   const [balls, setBalls] = useState<string[]>([]);
   const [isInHole, setIsInHole] = useState<boolean>(false);
@@ -54,11 +57,29 @@ export const Game = ({ playerOne, playerTwo }: GameProps) => {
     <>
       {/* Player & table */}
       <Player
+        gameState={gameState}
         canMove={canMove}
         setCanMove={setCanMove}
         setBallStopped={setBallStopped}
       />
       <Bilard />
+
+      <Html position={[0, 0, 0]} transform rotation={[-Math.PI / 2, 0, 0]}>
+        {gameState === "playing" && (
+          <div className="game-ui">
+            <h2>Current Player: {currentPlayer.name}</h2>
+            <div>
+              <h3>Scores</h3>
+              <p>
+                {playerOne.name}: {playerOne.score}
+              </p>
+              <p>
+                {playerTwo.name}: {playerTwo.score}
+              </p>
+            </div>
+          </div>
+        )}
+      </Html>
 
       {/* Normal balls */}
       <YellowBall />

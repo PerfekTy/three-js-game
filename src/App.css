@@ -1,3 +1,114 @@
 body {
   margin: 0;
+  overflow: hidden;
+  font-family: "Arial", sans-serif;
+}
+
+.conf {
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  text-align: center;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 1s ease-in-out;
+  width: 100%;
+  max-width: 600px;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.button {
+  display: inline-block;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 30px;
+  margin: 15px;
+  font-size: 18px;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    transform 0.3s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.settings {
+  background-color: #00ff9d;
+  color: #000;
+}
+
+.settings:hover {
+  background-color: #00d17c;
+}
+
+input {
+  padding: 10px;
+  margin: 10px;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.game-ui {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  opacity: 30%;
+  width: 2000px;
+  font-size: 4em;
+  text-align: center;
+  user-select: none;
+}
+
+.game-ui h2,
+.game-ui h3,
+.game-ui p {
+  margin: 20px 0;
+}
+
+.camera {
+  opacity: 40%;
+}
+
+.camera:hover {
+  cursor: pointer;
+  opacity: 100%;
+}
+
+.form_fieldset {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

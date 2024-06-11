@@ -30,7 +30,7 @@ export const BilardColliders = ({
   return (
     <RigidBody type="fixed" name="floor" key={0}>
       <Box position={[0, -27, 0]} args={[100, 1, 100]} receiveShadow>
-        <meshStandardMaterial color="#222" />
+        <meshStandardMaterial color="#222" opacity={0} transparent />
       </Box>
 
       <Box position={[0, -0.55, 0]} args={[64, 1, 30]} receiveShadow>
