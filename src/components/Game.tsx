@@ -20,6 +20,7 @@ import { SemiBlue } from "../models/semi/SemiBlue";
 import { Orange } from "../models/normal/Orange";
 import { BilardColliders } from "./BilardColliders";
 import { Player } from "./Player";
+import { biles } from "../biles";
 
 export type Player = {
   name: string;
@@ -76,6 +77,22 @@ export const Game = ({ playerOne, playerTwo, gameState }: GameProps) => {
               <p>
                 {playerTwo.name}: {playerTwo.score}
               </p>
+
+              <h1> {balls.length > 0 && "Potted biles:"}</h1>
+              {balls.map((ball, index) => {
+                const { name, image, width, height } = biles[ball];
+
+                return (
+                  <img
+                    className="ball-image"
+                    key={index}
+                    src={image}
+                    alt={name}
+                    width={width}
+                    height={height}
+                  />
+                );
+              })}
             </div>
           </div>
         )}

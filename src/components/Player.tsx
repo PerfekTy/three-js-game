@@ -32,9 +32,6 @@ export const Player = ({
     null
   );
   const [stretchPower, setStretchPower] = useState(0);
-  const [customCameraPosition, setCustomCameraPosition] = useState(
-    new THREE.Vector3(0, 0, 0)
-  );
 
   const handleMouseDown = useCallback(
     (event: MouseEvent) => {
@@ -99,28 +96,12 @@ export const Player = ({
     arrowHelper.current.visible = false;
   }, [isDragging, startPosition, currentPosition]);
 
-  useEffect(() => {
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-
-    const arrow = new THREE.ArrowHelper(
-      new THREE.Vector3(0, 0, 1),
-      new THREE.Vector3(0, 0, 0),
-      1,
-      getPowerColor(stretchPower)
-    );
-    arrow.visible = false;
-    scene.add(arrow);
-    arrowHelper.current = arrow;
-
-    return () => {
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-      scene.remove(arrow);
-    };
-  }, [handleMouseDown, handleMouseMove, handleMouseUp, scene]);
+  const getPowerColor = (power: number) => {
+    if (power > 1300) return "#ff0000";
+    if (power > 700) return "#ff6600";
+    if (power > 300) return "#ffcc00";
+    return "#00ff00";
+  };
 
   useFrame(() => {
     const maxSpeed = 130;
@@ -153,31 +134,45 @@ export const Player = ({
         playerPosition.z + 20
       );
 
-      setCustomCameraPosition(desiredCameraPosition);
-
       camera.position.copy(desiredCameraPosition);
       camera.lookAt(playerPosition.x, playerPosition.y, playerPosition.z);
     }
   });
 
-  const getPowerColor = (power: number) => {
-    if (power > 1300) return "#ff0000";
-    if (power > 700) return "#ff6600";
-    if (power > 300) return "#ffcc00";
-    return "#00ff00";
-  };
+  useEffect(() => {
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    const arrow = new THREE.ArrowHelper(
+      new THREE.Vector3(0, 0, 1),
+      new THREE.Vector3(0, 0, 0),
+      1,
+      getPowerColor(stretchPower)
+    );
+    arrow.visible = false;
+    scene.add(arrow);
+    arrowHelper.current = arrow;
+
+    return () => {
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      scene.remove(arrow);
+    };
+  }, [handleMouseDown, handleMouseMove, handleMouseUp, scene]);
 
   return (
     <>
       <RigidBody
         name="white"
-        position={gameState !== "playing" ? [0, 0, 0] : [20, 0, 0]}
+        position={gameState !== "playing" ? [0, 0, 0] : [20, 1, -4]}
         canSleep={false}
         colliders={false}
-        restitution={0.6}
+        restitution={0.5}
         friction={0.3}
-        linearDamping={0.2}
-        angularDamping={0.4}
+        linearDamping={0.4}
+        angularDamping={0.2}
         ref={player}
       >
         <BallCollider args={[1]} />
@@ -192,22 +187,7 @@ export const Player = ({
             rotation={[-Math.PI / 2, 0, 0.8]}
             className="camera"
           >
-            <Camera
-              size={100}
-              color="#fff"
-              onClick={() => {
-                const playerPosition = player.current.translation();
-                setCustomCameraPosition(
-                  new THREE.Vector3(
-                    playerPosition.x,
-                    playerPosition.y + 15,
-                    playerPosition.z + 20
-                  )
-                );
-                camera.position.copy(customCameraPosition);
-                console.log("clicked");
-              }}
-            />
+            <Camera size={100} color="#fff" />
           </Html>
           {/* Right up corner */}
           <Html
