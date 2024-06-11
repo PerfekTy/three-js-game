@@ -63,7 +63,7 @@ export const Player = () => {
     setStartPosition(null);
     setCurrentPosition(null);
     setStretchPower(0);
-  }, [isDragging, startPosition, currentPosition, player]);
+  }, [isDragging, startPosition, currentPosition]);
 
   useEffect(() => {
     window.addEventListener("mousedown", handleMouseDown);
@@ -79,38 +79,49 @@ export const Player = () => {
 
   useFrame(() => {
     const maxSpeed = 130;
-    const dampingFactor = 0.99;
     const velocity = player?.current?.linvel();
 
-    const speed = Math.sqrt(velocity.x ** 2 + velocity.z ** 2);
+    if (velocity) {
+      const speed = Math.sqrt(velocity.x ** 2 + velocity.z ** 2);
 
-    if (speed > maxSpeed) {
-      const scale = maxSpeed / speed;
-      player.current.setLinvel({
-        x: velocity.x * scale,
-        y: 0,
-        z: velocity.z * scale,
-      });
-    } else {
-      player.current.setLinvel({
-        x: velocity.x * dampingFactor,
-        y: 0,
-        z: velocity.z * dampingFactor,
-      });
+      if (speed > maxSpeed) {
+        const scale = maxSpeed / speed;
+        console.log(scale);
+
+        player.current.setLinvel({
+          x: velocity.x * scale,
+          y: velocity.y,
+          z: velocity.z * scale,
+        });
+      } else {
+        player.current.setLinvel({
+          x: velocity.x * 1,
+          y: velocity.y,
+          z: velocity.z * 1,
+        });
+      }
     }
 
     const playerPosition = player.current.translation();
 
-    const desiredCameraPosition = new THREE.Vector3(
-      playerPosition.x,
-      playerPosition.y + 30,
-      playerPosition.z + 20
-    );
+    if (playerPosition) {
+      const desiredCameraPosition = new THREE.Vector3(
+        playerPosition.x,
+        playerPosition.y + 30,
+        playerPosition.z + 20
+      );
 
-    camera.position.copy(desiredCameraPosition);
-
-    camera.lookAt(playerPosition.x, playerPosition.y, playerPosition.z);
+      camera.position.copy(desiredCameraPosition);
+      camera.lookAt(playerPosition.x, playerPosition.y, playerPosition.z);
+    }
   });
+
+  const getPowerColor = (power: number) => {
+    if (power > 1300) return "red";
+    if (power > 700) return "orange";
+    if (power > 300) return "yellow";
+    return "green";
+  };
 
   return (
     <>
@@ -120,7 +131,7 @@ export const Player = () => {
             position: "absolute",
             top: 10,
             left: 10,
-            color: "white",
+            color: getPowerColor(stretchPower),
             fontSize: "20px",
           }}
         >
@@ -128,8 +139,7 @@ export const Player = () => {
         </Html>
       )}
       <RigidBody
-        position={[20, 2, 0]}
-        rotation={[0, Math.PI / 4, 0]}
+        position={[-20, 0, 10]}
         colliders={false}
         restitution={0.6}
         friction={0.3}
