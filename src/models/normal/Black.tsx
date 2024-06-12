@@ -12,7 +12,11 @@ type GLTFResult = GLTF & {
   };
 };
 
-export function Black(props: JSX.IntrinsicElements["group"]) {
+interface BlackProps {
+  returnBlackBallPosition?: boolean;
+}
+
+export function Black({ returnBlackBallPosition }: BlackProps) {
   const { nodes, materials } = useGLTF("/black.glb") as GLTFResult;
   return (
     <RigidBody
@@ -22,10 +26,10 @@ export function Black(props: JSX.IntrinsicElements["group"]) {
       friction={0.3}
       linearDamping={0.2}
       angularDamping={0.4}
-      position={[-18.8, 1, 0]}
+      position={returnBlackBallPosition ? [-18.8, 1, 0] : [-18.8, 1.1, 0]}
     >
       <BallCollider args={[1]} />
-      <group {...props} dispose={null} scale={0.05}>
+      <group dispose={null} scale={0.05}>
         <mesh
           castShadow
           receiveShadow

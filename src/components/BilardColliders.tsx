@@ -7,6 +7,9 @@ interface BilardCollidersProps {
   addBall: (ballName: string) => void;
   setIsInHole: (isInHole: boolean) => void;
   currentPlayer: Player;
+  setReturnBallPosition: (returnBallPosition: boolean) => void;
+  ballStopped: boolean | null;
+  setReturnBlackBallPosition: (returnBlackBallPosition: boolean) => void;
 }
 
 export const BilardColliders = ({
@@ -14,16 +17,35 @@ export const BilardColliders = ({
   balls,
   setIsInHole,
   currentPlayer,
+  ballStopped,
+  setReturnBallPosition,
+  setReturnBlackBallPosition,
 }: BilardCollidersProps) => {
   const handleCollisionEnter = (other: any) => {
     if (other.rigidBodyObject) {
       const ballName = other.rigidBodyObject.name;
       if (!balls.includes(ballName)) {
         setIsInHole(true);
-        addBall(ballName);
-        currentPlayer.bills.push(ballName);
-        currentPlayer.score += 1;
+        if (ballName === "white") {
+          currentPlayer.score -= 1;
+          setReturnBallPosition(true);
+        } else if (ballName === "black") {
+          currentPlayer.score += 5;
+          setReturnBlackBallPosition(true);
+        } else {
+          addBall(ballName);
+          currentPlayer.bills.push(ballName);
+          currentPlayer.score += 1;
+        }
       }
+
+      if (ballStopped) {
+        setIsInHole(false);
+      }
+
+      setTimeout(() => {
+        setReturnBallPosition(false);
+      }, 100);
     }
   };
 

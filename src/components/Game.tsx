@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Html } from "@react-three/drei";
 import { GameState } from "../App";
 
@@ -37,11 +37,13 @@ interface GameProps {
 }
 
 export const Game = ({ playerOne, playerTwo, gameState }: GameProps) => {
-  const [currentPlayer, setCurrentPlayer] = useState(playerOne);
+  const [currentPlayer, setCurrentPlayer] = useState(playerTwo);
   const [balls, setBalls] = useState<string[]>([]);
   const [isInHole, setIsInHole] = useState<boolean>(false);
   const [canMove, setCanMove] = useState(true);
   const [ballStopped, setBallStopped] = useState<boolean | null>(null);
+  const [returnBallPosition, setReturnBallPosition] = useState(false);
+  const [returnBlackBallPosition, setReturnBlackBallPosition] = useState(false);
 
   const addBall = (ball: string) =>
     setBalls((prevBalls: string[]) => [...prevBalls, ball]);
@@ -51,13 +53,17 @@ export const Game = ({ playerOne, playerTwo, gameState }: GameProps) => {
       prevPlayer.name === playerOne.name ? playerTwo : playerOne
     );
 
-  console.log(currentPlayer);
-  console.log("ballStopped", ballStopped);
+  useEffect(() => {
+    if (ballStopped) {
+      switchPlayer();
+    }
+  }, [ballStopped]);
 
   return (
     <>
       {/* Player & table */}
       <Player
+        returnBallPosition={returnBallPosition}
         gameState={gameState}
         canMove={canMove}
         setCanMove={setCanMove}
@@ -108,7 +114,7 @@ export const Game = ({ playerOne, playerTwo, gameState }: GameProps) => {
       <Orange />
 
       {/* Black ball */}
-      <Black />
+      <Black returnBlackBallPosition={returnBlackBallPosition} />
 
       {/* Semi balls */}
       <SemiYellow />
@@ -122,9 +128,12 @@ export const Game = ({ playerOne, playerTwo, gameState }: GameProps) => {
       {/* Floor */}
       <BilardColliders
         balls={balls}
+        ballStopped={ballStopped}
         addBall={addBall}
         setIsInHole={setIsInHole}
         currentPlayer={currentPlayer}
+        setReturnBallPosition={setReturnBallPosition}
+        setReturnBlackBallPosition={setReturnBlackBallPosition}
       />
     </>
   );

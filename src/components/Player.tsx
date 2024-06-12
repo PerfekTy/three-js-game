@@ -12,6 +12,7 @@ interface PlayerProps {
   setCanMove: (canMove: boolean) => void;
   setBallStopped: (ballStopped: boolean | null) => void;
   gameState: GameState;
+  returnBallPosition: boolean;
 }
 
 export const Player = ({
@@ -19,6 +20,7 @@ export const Player = ({
   setCanMove,
   setBallStopped,
   gameState,
+  returnBallPosition,
 }: PlayerProps) => {
   const player = useRef<any>(null!);
   const arrowHelper = useRef<any>(null!);
@@ -166,7 +168,13 @@ export const Player = ({
     <>
       <RigidBody
         name="white"
-        position={gameState !== "playing" ? [0, 0, 0] : [20, 1, -4]}
+        position={
+          gameState !== "playing"
+            ? [0, 0, 0]
+            : returnBallPosition
+              ? [20, 1, 0]
+              : [20, 2, 0]
+        }
         canSleep={false}
         colliders={false}
         restitution={0.5}
